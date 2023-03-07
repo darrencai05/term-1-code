@@ -1,0 +1,86 @@
+
+
+#include "vex.h"
+
+
+using namespace vex;
+
+
+// A global instance of competition
+competition Competition;
+
+
+// define your global instances of motors and other devices here
+
+void pre_auton(void) {
+ // Initializing Robot Configuration. DO NOT REMOVE!
+ vexcodeInit();
+
+
+
+ // All activities that occur before the competition starts
+ // Example: clearing encoders, setting servo positions, ...
+}
+
+
+
+void autonomous(void) {
+ Drivetrain.driveFor(reverse, 200, mm);
+ conveyor.spin(forward, 20, velocityUnits::pct);
+ wait(1, seconds);
+}
+
+
+
+void usercontrol(void) { 
+  while (1){
+    
+  if(Controller1.ButtonUp.pressing()){
+  FowardReverseMotor.spin(reverse,100, pct);
+  LeftDriveMotor.spin(forward, 100, pct);
+  RightDriveMotor.spin(forward, 100, pct);}
+     
+  else if(Controller1.ButtonLeft.pressing()){
+  RightDriveMotor.spin(forward, 100, pct);
+  LeftDriveMotor.spin(reverse, 100, pct);}
+
+  else if(Controller1.ButtonRight.pressing()){
+  RightDriveMotor.spin(reverse, 100,pct);
+  LeftDriveMotor.spin(forward, 100, pct);}
+
+  else if(Controller1.ButtonDown.pressing()){
+  FowardReverseMotor.spin(forward, 100, pct);
+  LeftDriveMotor.spin(reverse, 100, pct);
+  RightDriveMotor.spin(reverse, 100, pct);}
+
+  else if(Controller1.ButtonA.pressing())
+  ConveyorbeltMotor.spin(forward, 100, pct);
+
+  else if(Controller1.ButtonB.pressing())
+  ConveyorbeltMotor.spin(reverse, 100, pct);
+
+
+  else {LeftDriveMotor.stop(coast);
+  RightDriveMotor.stop(coast);
+  FowardReverseMotor.stop(coast);
+  ConveyorbeltMotor.stop(coast);}
+
+    wait(5, msec); // Sleep the task for a short amount of time to
+                    // prevent wasted resources.
+  }
+}
+
+
+int main() {
+ Competition.autonomous(autonomous);
+ Competition.drivercontrol(usercontrol);
+
+
+ pre_auton();
+ 
+
+ // Prevent main from exiting with an infinite loop.
+ while (true) {
+   wait(100, msec);
+ }
+}
